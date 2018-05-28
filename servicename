@@ -1,0 +1,31 @@
+#!/bin/bash
+#@author: Rachit Mehrotra
+# chkconfig: 345 99 01
+# description: node_exporter startup script
+
+case "$1" in
+start)
+   /home/dvopusr/promethues-nodeexporter/node_exporter-0.14.0.linux-amd64/node_exporter &
+   echo $!>/var/run/exporter.pid
+   ;;
+stop)
+   kill `cat /var/run/exporter.pid`
+   rm /var/run/exporter.pid
+   ;;
+restart)
+   $0 stop
+   $0 start
+   ;;
+status)
+   if [ -e /var/run/exporter.pid ]; then
+      echo exporter is running, pid=`cat /var/run/exporter.pid`
+   else
+      echo exporter is NOT running
+      exit 1
+   fi
+   ;;
+*)
+   echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0
